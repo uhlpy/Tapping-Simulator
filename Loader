@@ -1,0 +1,381 @@
+-- // Init
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+-- // Variables
+local Purchase = false
+local Tap = false
+local AutoRebirth = false
+local RemotePath = game:GetService("ReplicatedStorage").Events
+local Amount
+local claim = false
+local daily = false
+local tapboost = false
+local luck2 = false
+local luck3 = false
+
+-- // Functions
+function buyEgg(Eggtype)
+    if Purchase == true then
+        RemotePath.HatchEgg:InvokeServer({}, (Eggtype), 1)
+    end
+end
+
+function tap()
+    if Tap == true then
+        RemotePath.Tap:FireServer("Main")
+    end
+end
+
+function Rebirth()
+    if Amount and AutoRebirth == true then
+        RemotePath.Rebirth:FireServer(Amount)
+    end
+end
+
+function Claim()
+    if claim == true then
+        RemotePath.ClaimRandomReward:FireServer()
+    end
+end
+
+function Daily()
+    if daily == true then
+        RemotePath.OpenDailyReward:InvokeServer()
+    end
+end
+
+function Boost()
+    if tapboost == true then
+        game:GetService("ReplicatedStorage").Events.UseBoost:FireServer("tripleTaps")
+    end
+end
+
+function Luck2()
+    if luck2 == true then
+        game:GetService("ReplicatedStorage").Events.UseBoost:FireServer("doubleLuck")
+    end
+end
+
+function Luck3()
+    if luck3 == true then
+        game:GetService("ReplicatedStorage").Events.UseBoost:FireServer("tripleLuck")
+    end
+end
+
+-- // UI
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Rayfield/main/source"))()
+
+local Window =
+    Rayfield:CreateWindow(
+        {
+            Name = "Evolution ; Tapping Simulator",
+            LoadingTitle = "Evolution of Cheating.",
+            LoadingSubtitle = "by Bitey",
+            ConfigurationSaving = {
+                Enabled = true,
+                FolderName = nil, -- Create a custom folder for your hub/game
+                FileName = "Big Hub"
+            },
+            Discord = {
+                Enabled = true,
+                Invite = "camlock", -- The Discord invite code, do not include discord.gg/
+                RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+            },
+            KeySystem = true, -- Set this to true to use our key system
+            KeySettings = {
+                Title = "Evolution ; #1",
+                Subtitle = "Key System",
+                Note = "Join the discord (discord.gg/camlock)",
+                FileName = "SiriusKey",
+                SaveKey = false,
+                GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+                Key = "Pro"
+            }
+        }
+    )
+
+-- // Tapping & Rebirths
+
+local Tab = Window:CreateTab("Farming", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("Tapping")
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Auto Tap",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(W)
+                Tap = W
+                while W do
+                    wait(0.001)
+                    tap()
+                end
+            end
+        }
+    )
+
+local Section = Tab:CreateSection("Rebirths")
+
+local Dropdown =
+    Tab:CreateDropdown(
+        {
+            Name = "Select Rebirth Amount",
+            Options = {
+                1,
+                2,
+                5,
+                10,
+                20,
+                100,
+                500,
+                2000,
+                4500,
+                8000,
+                62500,
+                75000,
+                108000,
+                125000,
+                171500,
+                256000,
+                350000,
+                364500,
+                500000,
+                750000,
+                1000000,
+                2000000,
+                50000000,
+                100000000,
+                1000000000,
+                10000000000,
+                100000000000
+            },
+            CurrentOption = 1,
+            Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(Am)
+                Amount = Am
+            end
+        }
+    )
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Auto Rebirth",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(f)
+                AutoRebirth = f
+                while f do
+                    wait(0.001)
+                    Rebirth(Amount)
+                end
+            end
+        }
+    )
+
+-- // Miscellaneous
+
+local Tab = Window:CreateTab("Misc", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("Rewards")
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Claim Rewards",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(t)
+                claim = t
+                while t do
+                    wait(0.001)
+                    Claim()
+                end
+            end
+        }
+    )
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Claim Daily Reward",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(y)
+                daily = y
+                while y do
+                    wait(0.001)
+                    Daily()
+                end
+            end
+        }
+    )
+
+local Section = Tab:CreateSection("Boosts")
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Auto Taps Boost",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(o)
+                tapboost = o
+                while o do
+                    Boost()
+                    wait(900)
+                end
+            end
+        }
+    )
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Auto Luck Boost [2X]",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(v)
+                luck2 = v
+                while v do
+                    Luck2()
+                    wait(900)
+                end
+            end
+        }
+    )
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Auto Luck Boost [3X]",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(e)
+                luck3 = e
+                while e do
+                    Luck3()
+                end
+            end
+        }
+    )
+
+-- // Egg Section
+
+local Tab = Window:CreateTab("Eggs", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("Auto Purchase")
+
+local Dropdown =
+    Tab:CreateDropdown(
+        {
+            Name = "Select Egg",
+            Options = {
+                "Starter",
+                "Jungle Egg",
+                "Flower Egg Robux",
+                "Bee Egg",
+                "Swamp Egg",
+                "Snow Egg",
+                "Desert Egg",
+                "Flower Egg Robux",
+                "Dearth Egg Robux",
+                "Death Egg",
+                "Forest Egg Robux",
+                "Forest Egg",
+                "Dominus Egg",
+                "Wood Egg",
+                "Mine Egg",
+                "Beach Egg",
+                "Beach Egg Robux",
+                "Dark Egg",
+                "Cloud Egg",
+                "Magma Egg",
+                "Fire Egg",
+                "Molten Egg",
+                "Underworld Egg",
+                "Blue Magma Egg",
+                "Red Magma Egg",
+                "Secret Magma Egg",
+                "Halloween Egg",
+                "Candy Egg",
+                "Flora Egg",
+                "Holy Wood Egg",
+                "Holy Bee Egg",
+                "Holy Egg",
+                "Castle Egg",
+                "Asteroid Egg",
+                "Festival Egg",
+                "Japan Egg",
+                "Station Egg",
+                "Robo Egg",
+                "Alien Egg",
+                "Frost Alien Egg",
+                "Toxic Alien Egg",
+                "Winter Beast Egg",
+                "Orange Egg",
+                "Hallow Egg",
+                "Spooky Egg",
+                "Halloween Dominus Egg",
+                "Pumpkin Egg",
+                "Ghoul Egg",
+                "Scrapyard Egg",
+                "Shipwreck Egg",
+                "Blood Egg",
+                "Water Egg",
+                "Ultra Water Egg",
+                "Deep Ocean Egg",
+                "Water Ruins Egg",
+                "Purple Water Egg",
+                "Neon Ice Egg",
+                "Iced Egg",
+                "Golem Egg",
+                "Secret Night Egg",
+                "75M Egg",
+                "Candycane Egg",
+                "Village Egg",
+                "New Years Egg",
+                "Trench Egg",
+                "Deep Flamed Egg"
+            },
+            CurrentOption = "Starter",
+            Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(Option)
+                Eggtype = Option
+            end
+        }
+    )
+
+local Toggle =
+    Tab:CreateToggle(
+        {
+            Name = "Auto Buy Egg",
+            CurrentValue = false,
+            Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Callback = function(e)
+                Purchase = e
+                while e do
+                    wait(0.001)
+                    buyEgg(Eggtype)
+                end
+            end
+        }
+    )
+
+-- // Credits
+
+local Tab = Window:CreateTab("Credits", 4483362458) -- Title, Image
+
+local Paragraph = Tab:CreateParagraph({Title = "Credits", Content = "bitey#0001"})
+
+local Paragraph = Tab:CreateParagraph({Title = "Why?", Content = "You may be wondering.. Why'd you make a script for this game? And why is the code so ugly? Well, I made it a few mnoths ago whilst trying to learn lua but i've decided to complete it because i enjoy playing this game + people could use this for learning themselves."})
+
+local Paragraph = Tab:CreateParagraph({Title = "Discord", Content = ".gg/closetcheat & .gg/camlock"})
+
+local Paragraph = Tab:CreateParagraph({Title = "Github", Content = "https://github.com/uhlpy"})
+
+local Paragraph = Tab:CreateParagraph({Title = "V3rmillion", Content = "https://v3rmillion.net/member.php?action=profile&uid=2290202"})
